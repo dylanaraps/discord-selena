@@ -10,7 +10,7 @@ from discord.ext.commands import Bot
 
 
 TOKEN = os.environ.get("DTOKEN")
-BOT = Bot(description="Selena Gomez", command_prefix="selena")
+BOT = Bot(description="Selena", command_prefix="selena")
 
 
 @BOT.event
