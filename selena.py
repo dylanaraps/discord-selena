@@ -41,7 +41,7 @@ async def on_message(m):
     if m.author.bot:
         return
 
-    if m.channel.id in CONFIG.get("channel", "nsfw"):
+    if m.channel.id in CONFIG.get("channel", "exclude_channels"):
         return
 
     await BOT.send_message(LOG_CHANNEL, log_msg(m, "MSG"))
@@ -53,7 +53,7 @@ async def on_message_delete(m):
     if m.author.bot:
         return
 
-    if m.channel.id in CONFIG.get("channel", "nsfw"):
+    if m.channel.id in CONFIG.get("channel", "exclude_channels"):
         return
 
     await BOT.send_message(LOG_CHANNEL, log_msg(m, "DELETED"))
@@ -65,7 +65,7 @@ async def on_message_edit(_, m):
     if m.author.bot:
         return
 
-    if m.channel.id in CONFIG.get("channel", "nsfw"):
+    if m.channel.id in CONFIG.get("channel", "exclude_channels"):
         return
 
     await BOT.send_message(LOG_CHANNEL, log_msg(m, "EDITED"))
