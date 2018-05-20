@@ -19,7 +19,7 @@ async def on_message(m):
     if m.author.bot:
         return
 
-    if m.channel == "anime":
+    if m.channel.name == "anime":
         return
 
     channel = BOT.get_channel("447547444566163457")
@@ -32,7 +32,7 @@ async def on_message_delete(m):
     if m.author.bot:
         return
 
-    if m.channel == "anime":
+    if m.channel.name == "anime":
         return
 
     channel = BOT.get_channel("447547444566163457")
@@ -45,7 +45,7 @@ async def on_message_edit(_, m):
     if m.author.bot:
         return
 
-    if m.channel == "anime":
+    if m.channel.name == "anime":
         return
 
     channel = BOT.get_channel("447547444566163457")
