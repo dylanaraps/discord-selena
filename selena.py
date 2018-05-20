@@ -12,6 +12,7 @@ from discord.ext.commands import Bot
 TOKEN = os.environ.get("DTOKEN")
 BOT = Bot(description="Selena", command_prefix="selena")
 NSFW = ["440356939256299530", "447524267199037451", "447524102505496576"]
+LOG_CHANNEL = ""
 
 
 @BOT.event
