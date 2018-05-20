@@ -1,5 +1,10 @@
 # Selena
 
+[![Discord](https://img.shields.io/discord/440354555197128704.svg)](https://discord.gg/BtnTPFF)
+[![Build Status](https://travis-ci.org/dylanaraps/pywal.svg?branch=master)](https://travis-ci.org/dylanaraps/pywal)
+[![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE.md)
+[![Donate](https://img.shields.io/badge/donate-patreon-yellow.svg)](https://www.patreon.com/dyla)
+
 A minimal bot to log all Discord messages for
 transparency.
 
