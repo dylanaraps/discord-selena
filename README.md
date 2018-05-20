@@ -12,9 +12,7 @@ you’d like to keep logging separate.
 ## Dependencies
 
 - python 3.5+
-- [discord](https://pypi.org/project/discord/)
-  (*python module*)
-
+- discord.py
 
 ## Getting Started
 

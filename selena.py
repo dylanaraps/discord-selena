@@ -7,24 +7,11 @@ import shutil
 import subprocess
 import sys
 
-from discord.ext.commands import Bot
-
-
-def get_config():
-    """Find the config file."""
-    home = os.path.expanduser("~")
-    user_config = os.path.join(home, ".config", "selena", "config.ini")
-
-    if os.path.isfile(user_config):
-        return user_config
-
-    return "config.ini"
+import discord
 
 
 CONFIG = configparser.ConfigParser()
-CONFIG.read(get_config())
-BOT = Bot(description=CONFIG.get("bot", "description"),
-          command_prefix=CONFIG.get("bot", "prefix"))
+BOT = discord.Client()
 LOG_CHANNEL = ""
 
 
@@ -78,8 +65,21 @@ def log_msg(m, msg_type):
               ", ".join([attach["url"] for attach in m.attachments]))
 
 
+def get_config():
+    """Find the config file."""
+    home = os.path.expanduser("~")
+    user_config = os.path.join(home, ".config", "selena", "config.ini")
+
+    if os.path.isfile(user_config):
+        return user_config
+
+    return "config.ini"
+
+
 def main():
     """Main function."""
+    CONFIG.read(get_config())
+
     if not CONFIG.get("auth", "token"):
         print("error: Token not found.")
         sys.exit(1)
