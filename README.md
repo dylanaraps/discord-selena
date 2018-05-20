@@ -20,16 +20,18 @@ you’d like to keep logging separate.
 
 **Setup**
 
-- `git clone https://dylanaraps.com/discord-selena`
-- `cd discord-selena`
-- `mkdir -p ~/.config/selena`
-- `cp config.ini ~/.config/selena`
+```sh
+git clone https://dylanaraps.com/discord-selena`
+cd discord-selena
+mkdir -p ~/.config/selena
+cp config.ini ~/.config/selena
+```
 
 **Bot Token**
 
 - Add your bot token to the config file.
 
-```
+```ini
 token =
 ```
 
@@ -38,7 +40,7 @@ token =
 - Change the value to the Channel ID of your logging
   channel.
 
-```
+```ini
 log_channel = 447547444566163457
 ```
 
@@ -48,6 +50,6 @@ log_channel = 447547444566163457
     - For example: Add all NSFW channel IDs to disable
       logging in NSFW channels.
 
-```
+```ini
 exclude_channels = [440356939256299530, 447524267199037451, 447524102505496576]
 ```
