@@ -1,8 +1,6 @@
 """
 Selena Gomez - A bot for Discord.
 """
-import datetime
-import logging
 import os
 import sys
 
@@ -16,29 +14,39 @@ BOT = Bot(description="Selena", command_prefix="selena")
 @BOT.event
 async def on_message(m):
     """Log all messages."""
-    log_msg = f"[{m.timestamp}] [#{m.channel}] {m.author}: {m.content} "
-    log_msg += ", ".join([attach["url"] for attach in m.attachments])
-    logging.info(log_msg)
+    if m.author.bot:
+        return
 
-    await BOT.process_commands(m)
+    channel = BOT.get_channel("447547444566163457")
+    await BOT.send_message(channel, log_msg(m))
 
 
 @BOT.event
 async def on_message_delete(m):
     """Log deleted messages."""
-    log_msg = f"DELETED [{m.timestamp}] [#{m.channel}] {m.author}: {m.content}"
-    logging.info(log_msg)
+    if m.author.bot:
+        return
 
-    await BOT.process_commands(m)
+    channel = BOT.get_channel("447547444566163457")
+    await BOT.send_message(channel, log_msg(m, "DELETED"))
 
 
 @BOT.event
 async def on_message_edit(_, m):
-    """Log edited messages."""
-    log_msg = f"EDITED [{m.timestamp}] [#{m.channel}] {m.author}: {m.content}"
-    logging.info(log_msg)
+    """Log deleted messages."""
+    if m.author.bot:
+        return
 
-    await BOT.process_commands(m)
+    channel = BOT.get_channel("447547444566163457")
+    await BOT.send_message(channel, log_msg(m, "EDITED"))
+
+
+def log_msg(m, msg_type="MSG"):
+    """Log message in specific format."""
+    msg = f"__{msg_type}__ [#{m.channel}] **@{m.author}** \n``` {m.content}"
+    msg += ", ".join([attach["url"] for attach in m.attachments])
+    msg += "```"
+    return msg
 
 
 def main():
@@ -47,11 +55,6 @@ def main():
         print("error: Token not found.")
         sys.exit(1)
 
-    os.makedirs("logs", exist_ok=True)
-    logging.basicConfig(format=("%(message)s"),
-                        level=logging.INFO,
-                        filename="logs/%s-log" % (datetime.date.today()),
-                        filemode="a")
     BOT.run(TOKEN)
 
 
