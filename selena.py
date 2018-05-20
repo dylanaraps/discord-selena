@@ -59,6 +59,7 @@ def main():
         sys.exit(1)
 
     if shutil.which("git"):
+        print("info: Updating bot.")
         subprocess.run(["git", "pull"])
 
     BOT.run(TOKEN)
