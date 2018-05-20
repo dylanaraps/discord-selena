@@ -1,6 +1,7 @@
 """
 Selena - A bot for Discord.
 """
+import configparser
 import os
 import shutil
 import subprocess
@@ -9,9 +10,21 @@ import sys
 from discord.ext.commands import Bot
 
 
-TOKEN = os.environ.get("DTOKEN")
-BOT = Bot(description="Selena", command_prefix="selena")
-NSFW = ["440356939256299530", "447524267199037451", "447524102505496576"]
+def get_config():
+    """Find the config file."""
+    home = os.path.expanduser("~")
+    user_config = os.path.join(home, ".config", "selena", "config.ini")
+
+    if os.path.isfile(user_config):
+        return user_config
+
+    return "config.ini"
+
+
+CONFIG = configparser.ConfigParser()
+CONFIG.read(get_config())
+BOT = Bot(description=CONFIG.get("bot", "description"),
+          command_prefix=CONFIG.get("bot", "prefix"))
 LOG_CHANNEL = ""
 
 
@@ -19,7 +32,7 @@ LOG_CHANNEL = ""
 async def on_ready():
     """On bot start."""
     global LOG_CHANNEL
-    LOG_CHANNEL = BOT.get_channel("447547444566163457")
+    LOG_CHANNEL = BOT.get_channel(CONFIG.get("channel", "log_channel"))
 
 
 @BOT.event
@@ -28,7 +41,7 @@ async def on_message(m):
     if m.author.bot:
         return
 
-    if m.channel.id in NSFW:
+    if m.channel.id in CONFIG.get("channel", "nsfw"):
         return
 
     await BOT.send_message(LOG_CHANNEL, log_msg(m, "MSG"))
@@ -40,7 +53,7 @@ async def on_message_delete(m):
     if m.author.bot:
         return
 
-    if m.channel.id in NSFW:
+    if m.channel.id in CONFIG.get("channel", "nsfw"):
         return
 
     await BOT.send_message(LOG_CHANNEL, log_msg(m, "DELETED"))
@@ -52,7 +65,7 @@ async def on_message_edit(_, m):
     if m.author.bot:
         return
 
-    if m.channel.id in NSFW:
+    if m.channel.id in CONFIG.get("channel", "nsfw"):
         return
 
     await BOT.send_message(LOG_CHANNEL, log_msg(m, "EDITED"))
@@ -67,7 +80,7 @@ def log_msg(m, msg_type):
 
 def main():
     """Main function."""
-    if not TOKEN:
+    if not CONFIG.get("auth", "token"):
         print("error: Token not found.")
         sys.exit(1)
 
@@ -75,7 +88,7 @@ def main():
         print("info: Updating bot.")
         subprocess.run(["git", "pull"])
 
-    BOT.run(TOKEN)
+    BOT.run(CONFIG.get("auth", "token"))
 
 
 main()
