@@ -1,7 +1,9 @@
 """
-Selena Gomez - A bot for Discord.
+Selena - A bot for Discord.
 """
 import os
+import shutil
+import subprocess
 import sys
 
 from discord.ext.commands import Bot
@@ -55,6 +57,9 @@ def main():
     if not TOKEN:
         print("error: Token not found.")
         sys.exit(1)
+
+    if shutil.which("git"):
+        subprocess.run(["git", "pull"])
 
     BOT.run(TOKEN)
 
