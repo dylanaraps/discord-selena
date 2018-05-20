@@ -11,6 +11,7 @@ from discord.ext.commands import Bot
 
 TOKEN = os.environ.get("DTOKEN")
 BOT = Bot(description="Selena", command_prefix="selena")
+NSFW = ["440356939256299530", "447524267199037451", "447524102505496576"]
 
 
 @BOT.event
@@ -19,7 +20,7 @@ async def on_message(m):
     if m.author.bot:
         return
 
-    if m.channel.id == "447524267199037451":
+    if m.channel.id in NSFW:
         return
 
     channel = BOT.get_channel("447547444566163457")
@@ -32,7 +33,7 @@ async def on_message_delete(m):
     if m.author.bot:
         return
 
-    if m.channel.id == "447524267199037451":
+    if m.channel.id in NSFW:
         return
 
     channel = BOT.get_channel("447547444566163457")
@@ -45,7 +46,7 @@ async def on_message_edit(_, m):
     if m.author.bot:
         return
 
-    if m.channel.id == "447524267199037451":
+    if m.channel.id in NSFW:
         return
 
     channel = BOT.get_channel("447547444566163457")
