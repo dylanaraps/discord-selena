@@ -6,7 +6,7 @@ matrix:
           python: 3.5
 
 install:
-    - pip install flake8 pylint
+    - pip install flake8 pylint discord
 
 script:
     - flake8 selena.py
