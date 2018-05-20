@@ -1,4 +1,4 @@
-# Discord Selena
+# Selena
 
 A minimal bot to log all Discord messages for
 transparency.
@@ -13,6 +13,7 @@ you’d like to keep logging separate.
 
 - python 3.5+
 - discord.py
+
 
 ## Getting Started
 
