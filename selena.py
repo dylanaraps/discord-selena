@@ -43,7 +43,8 @@ async def on_message_edit(_, m):
 
 def log_msg(m, msg_type="MSG"):
     """Log message in specific format."""
-    msg = f"__{msg_type}__ [#{m.channel}] **@{m.author}** \n``` {m.content}"
+    msg = "__%s__ [#%s] **@%s** \n```%s" \
+        % (msg_type, m.channel, m.author, m.content)
     msg += ", ".join([attach["url"] for attach in m.attachments])
     msg += "```"
     return msg
