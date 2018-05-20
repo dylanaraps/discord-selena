@@ -19,6 +19,9 @@ async def on_message(m):
     if m.author.bot:
         return
 
+    if m.channel == "anime":
+        return
+
     channel = BOT.get_channel("447547444566163457")
     await BOT.send_message(channel, log_msg(m))
 
@@ -29,6 +32,9 @@ async def on_message_delete(m):
     if m.author.bot:
         return
 
+    if m.channel == "anime":
+        return
+
     channel = BOT.get_channel("447547444566163457")
     await BOT.send_message(channel, log_msg(m, "DELETED"))
 
@@ -37,6 +43,9 @@ async def on_message_delete(m):
 async def on_message_edit(_, m):
     """Log deleted messages."""
     if m.author.bot:
+        return
+
+    if m.channel == "anime":
         return
 
     channel = BOT.get_channel("447547444566163457")
