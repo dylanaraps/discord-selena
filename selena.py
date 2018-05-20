@@ -24,7 +24,7 @@ async def on_message(m):
     if m.channel.id in NSFW:
         return
 
-    await BOT.send_message(LOG_CHANNEL, log_msg(m))
+    await BOT.send_message(LOG_CHANNEL, log_msg(m, "MSG"))
 
 
 @BOT.event
@@ -51,13 +51,11 @@ async def on_message_edit(_, m):
     await BOT.send_message(LOG_CHANNEL, log_msg(m, "EDITED"))
 
 
-def log_msg(m, msg_type="MSG"):
+def log_msg(m, msg_type):
     """Log message in specific format."""
-    msg = "__%s__ [#%s] **@%s** \n```%s" \
-        % (msg_type, m.channel, m.author, m.content)
-    msg += ", ".join([attach["url"] for attach in m.attachments])
-    msg += "```"
-    return msg
+    return "__%s__ [#%s] **@%s** \n```%s```\n```%s```" \
+           % (msg_type, m.channel, m.author, m.content,
+              ", ".join([attach["url"] for attach in m.attachments]))
 
 
 def main():
