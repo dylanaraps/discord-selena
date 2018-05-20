@@ -1,0 +1,14 @@
+[Unit]
+Description=discord-selena
+After=multi-user.target
+[Service]
+WorkingDirectory=/home/selena/discord-selena
+User=selena
+Group=selena
+ExecStart=/usr/bin/python3 /home/selena/discord-selena/selena.py
+Type=idle
+Restart=always
+RestartSec=15
+
+[Install]
+WantedBy=multi-user.target
