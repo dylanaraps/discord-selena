@@ -31,7 +31,7 @@ async def on_message(m):
     if m.channel.id in CONFIG.get("channel", "exclude_channels"):
         return
 
-    await BOT.send_message(LOG_CHANNEL, log_msg(m, "MSG"))
+    await BOT.send_message(LOG_CHANNEL, embed=make_embed(m, "sent"))
 
 
 @BOT.event
@@ -43,11 +43,11 @@ async def on_message_delete(m):
     if m.channel.id in CONFIG.get("channel", "exclude_channels"):
         return
 
-    await BOT.send_message(LOG_CHANNEL, log_msg(m, "DELETED"))
+    await BOT.send_message(LOG_CHANNEL, embed=make_embed(m, "deleted"))
 
 
 @BOT.event
-async def on_message_edit(_, m):
+async def on_message_edit(r, m):
     """Log deleted messages."""
     if m.author.bot:
         return
@@ -55,14 +55,39 @@ async def on_message_edit(_, m):
     if m.channel.id in CONFIG.get("channel", "exclude_channels"):
         return
 
-    await BOT.send_message(LOG_CHANNEL, log_msg(m, "EDITED"))
+    m.content = "%s\n=\n%s" % (r.content, m.content)
+    await BOT.send_message(LOG_CHANNEL, embed=make_embed(m, "edited"))
 
 
-def log_msg(m, msg_type):
-    """Log message in specific format."""
-    return "__%s__ [#%s] **@%s** \n```%s %s```" \
-           % (msg_type, m.channel, m.author, m.content,
-              ", ".join([attach["url"] for attach in m.attachments]))
+def msg_icon(msg_type):
+    """Get the icon to use for the msg type."""
+    return {
+        "sent":     ":e_mail:",
+        "edited":   ":pencil:",
+        "deleted":  ":wastebasket:",
+    }.get(msg_type, ":shrug:")
+
+
+def msg_color(msg_type):
+    """Get the color to use for the msg type."""
+    return {
+        "sent":     0x4caf50,
+        "edited":   0xffc107,
+        "deleted":  0xff5252,
+    }.get(msg_type, 0xffffff)
+
+
+def make_embed(m, msg_type="sent"):
+    """Create an embed."""
+    title = "%s Message %s by __%s__ in #%s" \
+        % (msg_icon(msg_type), msg_type, m.author, m.channel)
+    conte = "```fix\n%s %s\n```" \
+        % (m.content, ", ".join([attach["url"] for attach in m.attachments]))
+
+    embed = discord.Embed(title=title,
+                          description=conte,
+                          color=msg_color(msg_type))
+    return embed.set_footer(text="MSG ID: %s, ID: %s" % (m.id, m.author.id))
 
 
 def get_config():
