@@ -13,50 +13,38 @@ import discord
 CONFIG = configparser.ConfigParser()
 BOT = discord.Client()
 LOG_CHANNEL = ""
+EXCLUDE_CHANNELS = []
 
 
 @BOT.event
 async def on_ready():
     """On bot start."""
     global LOG_CHANNEL
+    global EXCLUDE_CHANNELS
     LOG_CHANNEL = BOT.get_channel(CONFIG.get("channel", "log_channel"))
+    EXCLUDE_CHANNELS = CONFIG.get("channel", "exclude_channels")
 
 
 @BOT.event
 async def on_message(m):
     """Log all messages."""
-    if m.author.bot:
-        return
-
-    if m.channel.id in CONFIG.get("channel", "exclude_channels"):
-        return
-
-    await BOT.send_message(LOG_CHANNEL, embed=make_embed(m, "sent"))
+    if not m.author.bot and m.channel.id not in EXCLUDE_CHANNELS:
+        await BOT.send_message(LOG_CHANNEL, embed=make_embed(m, "sent"))
 
 
 @BOT.event
 async def on_message_delete(m):
     """Log deleted messages."""
-    if m.author.bot:
-        return
-
-    if m.channel.id in CONFIG.get("channel", "exclude_channels"):
-        return
-
-    await BOT.send_message(LOG_CHANNEL, embed=make_embed(m, "deleted"))
+    if not m.author.bot and m.channel.id not in EXCLUDE_CHANNELS:
+        await BOT.send_message(LOG_CHANNEL, embed=make_embed(m, "deleted"))
 
 
 @BOT.event
 async def on_message_edit(r, m):
     """Log deleted messages."""
-    if m.author.bot:
-        return
-
-    if m.channel.id in CONFIG.get("channel", "exclude_channels"):
-        return
-
-    m.content = "%s\n=\n%s" % (r.content, m.content)
-    await BOT.send_message(LOG_CHANNEL, embed=make_embed(m, "edited"))
+    if not m.author.bot and m.channel.id not in EXCLUDE_CHANNELS:
+        m.content = "%s\n=\n%s" % (r.content, m.content)
+        await BOT.send_message(LOG_CHANNEL, embed=make_embed(m, "edited"))
 
 
 def msg_icon(msg_type):
