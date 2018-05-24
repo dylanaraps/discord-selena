@@ -13,38 +13,47 @@ import discord
 CONFIG = configparser.ConfigParser()
 BOT = discord.Client()
 LOG_CHANNEL = ""
-EXCLUDE_CHANNELS = []
 
 
 @BOT.event
 async def on_ready():
     """On bot start."""
     global LOG_CHANNEL
-    global EXCLUDE_CHANNELS
-    LOG_CHANNEL = BOT.get_channel(CONFIG.get("channel", "log_channel"))
-    EXCLUDE_CHANNELS = CONFIG.get("channel", "exclude_channels")
+    LOG_CHANNEL = BOT.get_channel(int(CONFIG.get("channel", "log_channel")))
 
 
 @BOT.event
 async def on_message(m):
     """Log all messages."""
-    if not m.author.bot and m.channel.id not in EXCLUDE_CHANNELS:
-        await BOT.send_message(LOG_CHANNEL, embed=make_embed(m, "sent"))
+    if not m.author.bot and not m.channel.is_nsfw():
+        await LOG_CHANNEL.send(embed=make_embed_m(m, "sent"))
 
 
 @BOT.event
 async def on_message_delete(m):
     """Log deleted messages."""
-    if not m.author.bot and m.channel.id not in EXCLUDE_CHANNELS:
-        await BOT.send_message(LOG_CHANNEL, embed=make_embed(m, "deleted"))
+    if not m.author.bot and not m.channel.is_nsfw():
+        await LOG_CHANNEL.send(embed=make_embed_m(m, "deleted"))
 
 
 @BOT.event
 async def on_message_edit(r, m):
-    """Log deleted messages."""
-    if not m.author.bot and m.channel.id not in EXCLUDE_CHANNELS:
+    """Log edited messages."""
+    if not m.author.bot and not m.channel.is_nsfw():
         m.content = "%s\n=\n%s" % (r.content, m.content)
-        await BOT.send_message(LOG_CHANNEL, embed=make_embed(m, "edited"))
+        await LOG_CHANNEL.send(embed=make_embed_m(m, "edited"))
+
+
+@BOT.event
+async def on_member_ban(_, user):
+    """Log bans."""
+    await LOG_CHANNEL.send(embed=make_embed_b(user, "banned"))
+
+
+@BOT.event
+async def on_member_unban(_, user):
+    """Log unbans."""
+    await LOG_CHANNEL.send(embed=make_embed_b(user, "unbanned"))
 
 
 def msg_icon(msg_type):
@@ -62,20 +71,30 @@ def msg_color(msg_type):
         "sent":     0x4caf50,
         "edited":   0xffc107,
         "deleted":  0xff5252,
-    }.get(msg_type, 0xffffff)
+    }.get(msg_type, 0x000000)
 
 
-def make_embed(m, msg_type="sent"):
-    """Create an embed."""
+def make_embed_m(m, msg_type="sent"):
+    """Create an embed for messages."""
     title = "%s Message %s by __%s__ in #%s" \
         % (msg_icon(msg_type), msg_type, m.author, m.channel)
     conte = "```fix\n%s %s\n```" \
-        % (m.content, ", ".join([attach["url"] for attach in m.attachments]))
+        % (m.content, ", ".join([attach.url for attach in m.attachments]))
 
     embed = discord.Embed(title=title,
                           description=conte,
                           color=msg_color(msg_type))
     return embed.set_footer(text="MSG ID: %s, ID: %s" % (m.id, m.author.id))
+
+
+def make_embed_b(m, msg_type="banned"):
+    """Create an embed for bans."""
+    title = "%s User __%s__ %s" % (msg_icon(msg_type), m.name, msg_type)
+
+    embed = discord.Embed(title=title,
+                          description="",
+                          color=msg_color(msg_type))
+    return embed.set_footer(text="ID: %s" % m.id)
 
 
 def get_config():
