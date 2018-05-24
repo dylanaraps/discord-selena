@@ -17,7 +17,7 @@ you’d like to keep logging separate.
 ## Dependencies
 
 - python 3.5+
-- discord.py
+- discord-rewrite
 
 
 ## Getting Started
@@ -46,14 +46,4 @@ token =
 
 ```ini
 log_channel = 447547444566163457
-```
-
-**Exluding Channels**
-
-- Change the list to a list of Channel IDs to exclude.
-    - For example: Add all NSFW channel IDs to disable
-      logging in NSFW channels.
-
-```ini
-exclude_channels = [440356939256299530, 447524267199037451, 447524102505496576]
 ```
